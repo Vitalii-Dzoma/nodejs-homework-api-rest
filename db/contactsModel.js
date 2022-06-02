@@ -3,28 +3,17 @@ const mongoose = require("mongoose");
 const contactSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    unique: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: [true, "Set name for contact"],
   },
   email: {
     type: String,
-    required: true,
   },
   phone: {
     type: String,
-    required: true,
   },
-  favourite: {
+  favorite: {
     type: Boolean,
-    required: false,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now(),
+    default: false,
   },
 });
 
