@@ -11,6 +11,7 @@ module.exports = {
         })
         .required(),
       phone: Joi.string().required(),
+      favourite: Joi.boolean(),
     });
     const validationResult = schema.validate(req.body);
     if (validationResult.error) {
