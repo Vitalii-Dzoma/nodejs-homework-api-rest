@@ -24,11 +24,6 @@ router.get("/:contactId", async (req, res, next) => {
 });
 
 router.post("/", addPostValidation, async (req, res, next) => {
-  const { favourite } = req.body;
-  if (favourite === null) {
-    favourite === false;
-  }
-  console.log(req.body);
   const data = await addContact(req.body);
   res.json({ data, message: "success" });
 });

@@ -43,10 +43,7 @@ const updateContact = async (contactId, body) => {
 };
 
 const updateStatusContact = async (contactId, body) => {
-  const { name, email, phone, favourite } = body;
-  await Contact.findByIdAndUpdate(contactId, {
-    $set: { name, email, phone, favourite },
-  });
+  await Contact.findByIdAndUpdate(contactId, body, { favourite: true });
 };
 
 module.exports = {
