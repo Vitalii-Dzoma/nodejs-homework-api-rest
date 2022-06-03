@@ -29,9 +29,7 @@ const removeContact = async (contactId) => {
 
 const addContact = async (body) => {
   const { name, email, phone, favourite } = body;
-  if (!favourite) {
-    favourite === false;
-  }
+
   const contact = new Contact({ id: uuidv4(), name, email, phone, favourite });
   await contact.save();
 };
