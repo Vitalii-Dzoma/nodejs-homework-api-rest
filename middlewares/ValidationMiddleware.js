@@ -14,7 +14,7 @@ module.exports = {
     });
     const validationResult = schema.validate(req.body);
     if (validationResult.error) {
-      next(new ValidationError(JSON.stringify(validationResult.error.details)));
+      res.json({ message: `Validation hasn't passed. Error: ${error}` });
     }
     next();
   },

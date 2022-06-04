@@ -1,24 +1,15 @@
 const fs = require("fs").promises;
-const contactPath = "./models/contacts.json";
 const { v4: uuidv4 } = require("uuid");
 const { Contact } = require("../db/contactsModel");
-const { WrongParametersError } = require("../helpers/errors");
 
 const listContacts = async () => {
-  // const data = await fs.readFile(contactPath, "utf8");
   const contacts = await Contact.find({});
   console.log("Database connection successful");
-  console.log(contacts);
   return contacts;
 };
 
 const getContactById = async (contactId) => {
   const contact = await Contact.findById(contactId);
-  if (!contact) {
-    throw new WrongParametersError(
-      `Failure, no posts with id '${contactId}' found!`
-    );
-  }
 
   return contact;
 };
@@ -28,9 +19,7 @@ const removeContact = async (contactId) => {
 };
 
 const addContact = async (body) => {
-  const { name, email, phone, favourite } = body;
-
-  const contact = new Contact({ id: uuidv4(), name, email, phone, favourite });
+  const contact = new Contact({ id: uuidv4(), ...body });
   await contact.save();
 };
 
@@ -43,7 +32,9 @@ const updateContact = async (contactId, body) => {
 };
 
 const updateStatusContact = async (contactId, body) => {
-  await Contact.findByIdAndUpdate(contactId, body, { favourite: true });
+  await Contact.findByIdAndUpdate(contactId, body, {
+    favourite: true,
+  });
 };
 
 module.exports = {

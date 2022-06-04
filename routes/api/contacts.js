@@ -1,44 +1,25 @@
 const express = require("express");
+const { updateStatusContact } = require("../../models/contacts.js");
 const {
-  updateContact,
-  listContacts,
-  getContactById,
-  removeContact,
-  addContact,
-  updateStatusContact,
-} = require("../../models/contacts.js");
+  getAllContactsController,
+  getContactWithId,
+  renewContact,
+  createContact,
+  deleteContact,
+} = require("../../controllers/ContactController");
 const { addPostValidation } = require("../../middlewares/ValidationMiddleware");
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  const data = await listContacts();
+router.get("/", getAllContactsController);
 
-  res.json({ data, message: "success" });
-});
+router.get("/:contactId", getContactWithId);
 
-router.get("/:contactId", async (req, res, next) => {
-  const data = await getContactById(req.params.contactId);
+router.post("/", addPostValidation, createContact);
 
-  res.json({ data, message: "success" });
-});
+router.delete("/:contactId", deleteContact);
 
-router.post("/", addPostValidation, async (req, res, next) => {
-  const data = await addContact(req.body);
-  res.json({ data, message: "success" });
-});
-
-router.delete("/:contactId", async (req, res, next) => {
-  const data = await removeContact(req.params.contactId);
-
-  res.json({ data, message: "success" });
-});
-
-router.put("/:contactId", addPostValidation, async (req, res, next) => {
-  const data = await updateContact(req.params.contactId, req.body);
-
-  res.json({ data, message: "success" });
-});
+router.put("/:contactId", addPostValidation, renewContact);
 
 router.patch(
   "/:contactId/favourite",
