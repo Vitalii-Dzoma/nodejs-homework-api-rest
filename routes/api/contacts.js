@@ -1,5 +1,5 @@
 const express = require("express");
-const { updateStatusContact } = require("../../models/contacts.js");
+const { updateStatusContact } = require("../../models/ContactService.js");
 const {
   getAllContactsController,
   getContactWithId,
