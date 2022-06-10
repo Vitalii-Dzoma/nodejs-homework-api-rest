@@ -7,9 +7,11 @@ const {
   createContact,
   deleteContact,
 } = require("../../controllers/ContactController");
+const { authMiddleware } = require("../../middlewares/AuthMiddleware");
 const { addPostValidation } = require("../../middlewares/ValidationMiddleware");
 
 const router = express.Router();
+router.use(authMiddleware);
 
 router.get("/", getAllContactsController);
 

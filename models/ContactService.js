@@ -2,37 +2,39 @@ const fs = require("fs").promises;
 const { v4: uuidv4 } = require("uuid");
 const { Contact } = require("../db/contactsModel");
 
-const listContacts = async () => {
-  const contacts = await Contact.find({});
-  console.log("Database connection successful");
+const listContacts = async (ownerId) => {
+  const contacts = await Contact.find({ ownerId });
   return contacts;
 };
 
-const getContactById = async (contactId) => {
-  const contact = await Contact.findById(contactId);
+const getContactById = async (contactId, ownerId) => {
+  const contact = await Contact.findOne({ _id: contactId, ownerId });
 
   return contact;
 };
 
-const removeContact = async (contactId) => {
-  await Contact.findByIdAndRemove(contactId);
+const removeContact = async (contactId, ownerId) => {
+  await Contact.findOneAndRemove({ _id: contactId, ownerId });
 };
 
-const addContact = async (body) => {
-  const contact = new Contact({ id: uuidv4(), ...body });
+const addContact = async ({ name, email, phone }, ownerId) => {
+  const contact = new Contact({ name, email, phone, ownerId });
   await contact.save();
 };
 
-const updateContact = async (contactId, body) => {
+const updateContact = async (contactId, body, ownerId) => {
   const { name, email, phone } = body;
 
-  await Contact.findByIdAndUpdate(contactId, {
-    $set: { name, email, phone },
-  });
+  await Contact.findOneAndUpdate(
+    { _id: contactId, ownerId },
+    {
+      $set: { name, email, phone },
+    }
+  );
 };
 
-const updateStatusContact = async (contactId, body) => {
-  await Contact.findByIdAndUpdate(contactId, body, {
+const updateStatusContact = async (contactId, body, ownerId) => {
+  await Contact.findOneAndUpdate({ _id: contactId, ownerId }, body, {
     favourite: true,
   });
 };

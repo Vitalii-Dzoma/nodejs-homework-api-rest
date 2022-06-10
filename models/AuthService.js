@@ -19,4 +19,10 @@ const login = async (email, password) => {
   return token;
 };
 
-module.exports = { registration, login };
+const findUserById = async (ownerId) => {
+  const user = await User.findById(ownerId);
+  console.log(user);
+  return user;
+};
+
+module.exports = { registration, login, findUserById };

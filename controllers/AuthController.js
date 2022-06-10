@@ -1,5 +1,5 @@
 const jsonwebtoken = require("jsonwebtoken");
-const { registration, login } = require("../models/AuthService");
+const { registration, login, findUserById } = require("../models/AuthService");
 
 const registrationController = async (req, res) => {
   const { email, password } = req.body;
