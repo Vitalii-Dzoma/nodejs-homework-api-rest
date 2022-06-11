@@ -9,7 +9,7 @@ const authMiddleware = (req, res, next) => {
       next(res.status(401).json({ message: "Not authorized" }));
     }
 
-    const [token] = authorization.split(" ");
+    const [, token] = authorization.split(" ");
 
     if (!token) {
       next(res.status(401).json({ message: "Not authorized" }));

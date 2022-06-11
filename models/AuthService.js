@@ -20,8 +20,7 @@ const login = async (email, password) => {
 };
 
 const findUserById = async (ownerId) => {
-  const user = await User.findById(ownerId);
-  console.log(user);
+  const user = await User.findOne({ _id: ownerId });
   return user;
 };
 

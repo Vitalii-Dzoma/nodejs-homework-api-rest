@@ -65,24 +65,10 @@ const renewContact = async (req, res) => {
     .json({ updatedCont, message: "Contact successfully updated" });
 };
 
-const matchUserByIdController = async (req, res, next) => {
-  console.log(req);
-  const { _id: ownerId } = req.owner;
-  try {
-    const user = await findUserById(ownerId);
-    req.token = "";
-    res.status(204).json({ message: "No Content" });
-    return user;
-  } catch (err) {
-    res.status(401).json({ message: "Not authorized" });
-  }
-};
-
 module.exports = {
   getAllContactsController,
   getContactWithId,
   renewContact,
   createContact,
   deleteContact,
-  matchUserByIdController,
 };

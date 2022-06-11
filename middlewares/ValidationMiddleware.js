@@ -18,4 +18,22 @@ module.exports = {
     }
     next();
   },
+
+  addUserValidation: (req, res, next) => {
+    const schema = Joi.object({
+      email: Joi.string()
+        .email({
+          minDomainSegments: 2,
+          tlds: { allow: ["com", "net"] },
+        })
+        .required(),
+      password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+    });
+    
+    const validationResult = schema.validate(req.body);
+    if (validationResult.error) {
+      res.json({ message: `Validation hasn't passed. Error: ${error}` });
+    }
+    next();
+  },
 };

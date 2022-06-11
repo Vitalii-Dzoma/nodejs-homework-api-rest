@@ -5,7 +5,9 @@ const {
 } = require("../../controllers/AuthController");
 const {
   matchUserByIdController,
-} = require("../../controllers/ContactController");
+  getCurrentUserController,
+} = require("../../controllers/AuthController");
+const { addUserValidation } = require("../../middlewares/ValidationMiddleware");
 
 const { authMiddleware } = require("../../middlewares/AuthMiddleware");
 
@@ -16,5 +18,12 @@ router.post("/signup", registrationController);
 router.post("/login", loginController);
 
 router.get("/logout", authMiddleware, matchUserByIdController);
+
+router.get(
+  "/current",
+  // addUserValidation,
+  authMiddleware,
+  getCurrentUserController
+);
 
 module.exports = router;
