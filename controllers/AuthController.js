@@ -1,5 +1,10 @@
 const jsonwebtoken = require("jsonwebtoken");
-const { registration, login, findUserById } = require("../models/AuthService");
+const {
+  registration,
+  login,
+  findUserById,
+  findUserByIdAndUpdate,
+} = require("../models/AuthService");
 
 const registrationController = async (req, res) => {
   const { email, password } = req.body;
@@ -49,8 +54,8 @@ const getCurrentUserController = async (req, res) => {
   }
   try {
     const user = await findUserById(ownerId);
-    const { email, subscription } = user;
-    req.token = "";
+    const { email, subscription, token } = user;
+    token = null;
     res.status(200).json({ email, subscription, message: "OK" });
     return user;
   } catch (err) {
