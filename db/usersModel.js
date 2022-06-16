@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
+  avatarURL: String,
   password: {
     type: String,
     required: [true, "Password is required"],
@@ -16,6 +17,7 @@ const userSchema = new mongoose.Schema({
     enum: ["starter", "pro", "business"],
     default: "starter",
   },
+
   token: {
     type: String,
     default: null,
