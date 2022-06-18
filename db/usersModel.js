@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const gravatar = require("gravatar");
 
 const userSchema = new mongoose.Schema({
-  avatarURL: String,
   password: {
     type: String,
     required: [true, "Password is required"],
@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "Email is required"],
     unique: true,
+  },
+  avatarUrl: {
+    type: String,
+    default: () =>
+      gravatar.url(this.email, { s: "100", r: "x", d: "retro" }, true),
   },
   subscription: {
     type: String,

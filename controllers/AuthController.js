@@ -9,22 +9,10 @@ const {
 
 const registrationController = async (req, res) => {
   const { email, password } = req.body;
-  const avatarToGenerate = gravatar.url(
-    email,
-    { s: "100", r: "x", d: "retro" },
-    true
-  );
-  console.log(avatarToGenerate);
   try {
-    const user = await registration(
-      email,
-      password,
-      {
-        subscription: "starter",
-
-      },
-      { avatarURL: avatarToGenerate }
-    );
+    const user = await registration(email, password, avatarURL, {
+      subscription: "starter",
+    });
     res.status(201).json({ user, message: "Created" });
   } catch (err) {
     res.status(409).json({ message: "Email in use" });
