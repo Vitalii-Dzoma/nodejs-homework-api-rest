@@ -10,7 +10,7 @@ const {
 const registrationController = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await registration(email, password, avatarURL, {
+    const user = await registration(email, password, {
       subscription: "starter",
     });
     res.status(201).json({ user, message: "Created" });
