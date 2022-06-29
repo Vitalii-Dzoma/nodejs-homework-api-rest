@@ -2,6 +2,7 @@ const express = require("express");
 const {
   registrationController,
   loginController,
+  registrationVerificationController,
 } = require("../../controllers/AuthController");
 const {
   matchUserByIdController,
@@ -19,11 +20,8 @@ router.post("/login", loginController);
 
 router.get("/logout", authMiddleware, matchUserByIdController);
 
-router.get(
-  "/current",
-  // addUserValidation,
-  authMiddleware,
-  getCurrentUserController
-);
+router.get("/verify/:verificationToken", registrationVerificationController);
+
+router.get("/current", authMiddleware, getCurrentUserController);
 
 module.exports = router;

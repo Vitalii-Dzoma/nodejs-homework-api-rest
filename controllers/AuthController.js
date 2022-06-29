@@ -4,7 +4,7 @@ const {
   registration,
   login,
   findUserById,
-  findUserByIdAndUpdate,
+  registrationConfirmation,
 } = require("../models/AuthService");
 
 const registrationController = async (req, res) => {
@@ -15,6 +15,7 @@ const registrationController = async (req, res) => {
     });
     res.status(201).json({ user, message: "Created" });
   } catch (err) {
+    console.log(err);
     res.status(409).json({ message: "Email in use" });
   }
 };
@@ -28,7 +29,11 @@ const loginController = async (req, res) => {
     res.status(200).json({ message: "Logged in", token });
     return token;
   } catch (err) {
-    res.status(401).json({ message: "Email or password is wrong" });
+    res
+      .status(401)
+      .json({
+        message: "Email or password is wrong or need to verify your email",
+      });
   }
 };
 
@@ -63,9 +68,21 @@ const getCurrentUserController = async (req, res) => {
   }
 };
 
+const registrationVerificationController = async (req, res) => {
+  const { verificationToken } = req.params;
+  try {
+    const user = await registrationConfirmation(verificationToken);
+    res.status(200).json({ user, message: "Verification successful" });
+  } catch (err) {
+    console.log(err);
+    res.status(40).json({ message: "Not found" });
+  }
+};
+
 module.exports = {
   registrationController,
   loginController,
   matchUserByIdController,
   getCurrentUserController,
+  registrationVerificationController,
 };
