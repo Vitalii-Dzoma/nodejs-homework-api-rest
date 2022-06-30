@@ -3,6 +3,8 @@ const {
   registrationController,
   loginController,
   registrationVerificationController,
+  forgotPasswordController,
+  verificationErrorController,
 } = require("../../controllers/AuthController");
 const {
   matchUserByIdController,
@@ -22,6 +24,10 @@ router.get("/logout", authMiddleware, matchUserByIdController);
 
 router.get("/verify/:verificationToken", registrationVerificationController);
 
+router.post("/verify/", verificationErrorController);
+
 router.get("/current", authMiddleware, getCurrentUserController);
+
+router.post("/forgot_password", forgotPasswordController);
 
 module.exports = router;

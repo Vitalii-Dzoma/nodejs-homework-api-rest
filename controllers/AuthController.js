@@ -5,6 +5,8 @@ const {
   login,
   findUserById,
   registrationConfirmation,
+  forgotPassword,
+  verificationError,
 } = require("../models/AuthService");
 
 const registrationController = async (req, res) => {
@@ -21,6 +23,7 @@ const registrationController = async (req, res) => {
 };
 const loginController = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const token = await login(email, password, {
       subscription: "starter",
@@ -29,11 +32,10 @@ const loginController = async (req, res) => {
     res.status(200).json({ message: "Logged in", token });
     return token;
   } catch (err) {
-    res
-      .status(401)
-      .json({
-        message: "Email or password is wrong or need to verify your email",
-      });
+    console.log(err);
+    res.status(401).json({
+      message: "Email or password is wrong or need to verify your email",
+    });
   }
 };
 
@@ -72,10 +74,36 @@ const registrationVerificationController = async (req, res) => {
   const { verificationToken } = req.params;
   try {
     const user = await registrationConfirmation(verificationToken);
+    console.log(user);
     res.status(200).json({ user, message: "Verification successful" });
   } catch (err) {
     console.log(err);
-    res.status(40).json({ message: "Not found" });
+    res.status(404).json({ message: "Not found" });
+  }
+};
+
+const forgotPasswordController = async (req, res) => {
+  const { email } = req.body;
+
+  await forgotPassword(email);
+
+  res.json({ status: "success" });
+};
+
+const verificationErrorController = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    res.status(404).json({ message: "missing required field email" });
+  }
+
+  try {
+    const user = await verificationError(email);
+    console.log(user);
+    res.status(400).json({ message: "Verification has already been passed" });
+  } catch (err) {
+    console.log(err);
+    res.status(404).json({ message: "Not found" });
   }
 };
 
@@ -85,4 +113,6 @@ module.exports = {
   matchUserByIdController,
   getCurrentUserController,
   registrationVerificationController,
+  forgotPasswordController,
+  verificationErrorController,
 };

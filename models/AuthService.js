@@ -23,8 +23,8 @@ const registration = async (email, password) => {
     from: email,
     to: "voda24147@gmail.com",
     subject: "Nodemailer test",
-    text: `Подтвердите вашу электронную почту по ссылке https://localhost:3000/api/auth/verify/${verificationToken}`,
-    html: `Подтвердите вашу электронную почту по ссылке https://localhost:3000/api/auth/verify/${verificationToken}`,
+    text: `Подтвердите вашу электронную почту по ссылке localhost:3000/api/users/verify/${verificationToken}`,
+    html: `Подтвердите вашу электронную почту по ссылке localhost:3000/api/users/verify/${verificationToken}`,
   };
   await transporter.sendMail(emailOptions);
 };
@@ -35,24 +35,61 @@ const registrationConfirmation = async (verificationToken) => {
     verified: false,
   });
 
-  console.log(verifiedUser);
-
   verifiedUser.verified = true;
-  verifiedUser.verificationToken = null;
-  // await verifiedUser.save();
+  verifiedUser.verificationToken = 1;
+  await verifiedUser.save();
 
   const emailOptions = {
     from: verifiedUser.email,
     to: "voda24147@gmail.com",
-    subject: "Nodemailer test",
-    text: `Подтвердите вашу электронную почту по ссылке https://localhost:3000/api/auth/verify/${verificationToken}`,
-    html: `Подтвердите вашу электронную почту по ссылке https://localhost:3000/api/auth/verify/${verificationToken}`,
+    subject: "Thank you for registration!",
+    text: "and easy to do anywhere, even with Node.js",
+    html: "<h1>and easy to do anywhere, even with Node.js</h1>",
+  };
+  await transporter.sendMail(emailOptions);
+};
+
+const forgotPassword = async (email) => {
+  const user = await User.findOne({ email, confirmed: true });
+
+  if (!user) {
+    throw new NotAuthorizedError(`No user with email '${email}' found`);
+  }
+
+  const password = sha256(Date.now() + process.env.JWT_SECRET);
+  user.password = password;
+  await user.save();
+
+  const emailOptions = {
+    from: user.email,
+    to: "voda24147@gmail.com",
+    subject: "Forgot password!",
+    text: `Here is your temporary password: ${password}`,
+    html: `Here is your temporary password: ${password}`,
+  };
+  await transporter.sendMail(emailOptions);
+};
+
+const verificationError = async (email) => {
+  const user = await User.findOne({ email, confirmed: false });
+
+  if (!user) {
+    throw new NotAuthorizedError(`No user with email '${email}' found`);
+  }
+
+  await user.save();
+
+  const emailOptions = {
+    from: user.email,
+    to: "voda24147@gmail.com",
+    subject: "Verification error!",
+    text: `Here is your verification token: ${user.verificationToken}`,
   };
   await transporter.sendMail(emailOptions);
 };
 
 const login = async (email, password) => {
-  const user = await User.findOne({ email, password, verified: true });
+  const user = await User.findOne({ email, verified: true });
   console.log(user);
   const token = jwt.sign(
     {
@@ -73,4 +110,6 @@ module.exports = {
   login,
   findUserById,
   registrationConfirmation,
+  forgotPassword,
+  verificationError,
 };
